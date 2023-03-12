@@ -27,8 +27,8 @@ env:
   CI_REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
   BUILDCACHE: ghcr.io/${{ github.repository }}
   #BUILDCACHE: ghcr.io/${{ github.repository_owner }}/buildcache
-  #PLATFORMS: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
-  PLATFORMS: "linux/amd64"
+  PLATFORMS: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
+  #PLATFORMS: "linux/amd64"
   PLATFORMS_ALPINE: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
 
 jobs:
