@@ -26,7 +26,8 @@ env:
   DH_IMAGE_NAME: index.docker.io/thefoundation
   CI_REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
   BUILDCACHE: ghcr.io/${{ github.repository_owner }}/buildcache
-  PLATFORMS: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
+  #PLATFORMS: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
+  PLATFORMS: "linux/amd64"
   PLATFORMS_ALPINE: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
 
 jobs:
@@ -96,9 +97,13 @@ jobs:
         run: docker image ls
       - name: show steps
         run: echo "pushing to $CI_REGISTRY_IMAGE cached by $BUILDCACHE"
+      - name: show cmd
+#        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
+        run: echo docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
+
       - name: build images
 #        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
-        run: docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}_perdition_ubuntu --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}_perdition_ubuntu -t $CI_REGISTRY_IMAGE:ubuntu  -f Dockerfile .
+        run: docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
       - name: show files
 #        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
         run: docker image ls 
