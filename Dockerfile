@@ -11,7 +11,7 @@ RUN sh -c 'which apk && apk add git curl bash ; which apt-get && apt-get update 
 #RUN bash -c 'cd /etc/scripts/rust-webmention && cargo install webmention --bin webmention --features=cli --path . '
 #RUN which webmention
 
-RUN ( test -e /etc/webmention-static-ci || git clone https://gitlab.com/the-foundation/webmention-static-ci.git /etc/webmention-static-ci) && bash /etc/webmention-static-ci/run.sh PACKAGE_INSTALLER PACKAGE_INSTALLER && echo DONE
+RUN ( test -e /etc/webmention-static-ci || git clone https://gitlab.com/the-foundation/webmention-static-ci.git /etc/webmention-static-ci) && bash /etc/webmention-static-ci/run.sh PACKAGE_INSTALLER PACKAGE_INSTALLER && echo DONE && rm -rf /usr/share/doc /usr/share/man /root/.cpan /root/.cpanm /root/.cache/* || true 
 RUN which trafilatura
 RUN which whim
 RUN which npm
