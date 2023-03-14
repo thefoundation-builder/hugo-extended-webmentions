@@ -18,5 +18,6 @@ RUN which npm
 RUN bash -c "test -e /etc/scripts/ || mkdir /etc/scripts/ ; test -e /etc/scripts/gitub.com_drivet_send-all-webmentions/tmp/.gitub.com_drivet_send-all-webmentions || (  git clone https://github.com/drivet/send-all-webmentions.git /etc/scripts/gitub.com_drivet_send-all-webmentions/tmp/.gitub.com_drivet_send-all-webmentions )"
 #RUN bash -c "cd /etc/scripts/gitub.com_drivet_send-all-webmentions/tmp/.gitub.com_drivet_send-all-webmentions && npm install"
 
-RUN du -m -s $(find / -type d -mindepth 2 -maxdepth 2 -xdev)
+RUN du -m -s $(find / -type d -mindepth 3 -maxdepth 3 -xdev) |sort -n
+RUN du -m -s $(find / -type d -mindepth 2 -maxdepth 2 -xdev) |sort -n
 RUN du -msx /
