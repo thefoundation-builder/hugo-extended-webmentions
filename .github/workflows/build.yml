@@ -25,6 +25,8 @@ env:
   GH_IMAGE_NAME: ghcr.io/${{ github.repository }}
   DH_IMAGE_NAME: index.docker.io/thefoundation
   CI_REGISTRY_IMAGE: ghcr.io/${{ github.repository }}
+  QU_REGISTRY_IMAGE: quay.io/${{ github.repository }}/library:${{ github.event.repository.name }}
+ #QU_REGISTRY_IMAGE: quay.io/${{ github.repository }}/${{ github.event.repository.name }}
   BUILDCACHE: ghcr.io/${{ github.repository }}
   #BUILDCACHE: ghcr.io/${{ github.repository_owner }}/buildcache
   PLATFORMS: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
@@ -65,6 +67,8 @@ jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
     env:
+      QUAY_PASS: ${{ secrets.QUAY_PASS }}
+      QUAY_USER: ${{ secrets.QUAY_USER }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
       APT_HTTP_PROXY_URL: ${{ secrets.APT_HTTP_PROXY_URL }}
 
@@ -103,8 +107,19 @@ jobs:
         run: echo docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
 
       - name: build images
-#        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
+#        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=library;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
         run: docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
+      -
+        name: Login to Quay Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USER }}
+          password: ${{ secrets.QUAY_PASS }}
+      - name: build images to quay
+#        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASS;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=libary;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh base-focal "
+        run: docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $QU_REGISTRY_IMAGE:latest  -f Dockerfile .
+  
       - name: show files
 #        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
         run: docker image ls 
