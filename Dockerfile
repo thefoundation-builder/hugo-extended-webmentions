@@ -1,7 +1,7 @@
 FROM registry.gitlab.com/pages/hugo/hugo_extended
 #docker run --rm -it registry.gitlab.com/pages/hugo/hugo_extended ash
 RUN sh -c '(which apk && apk add git curl bash)||true ;'
-RUN sh c   '(which apt-get && apt-get update && apt-get -y --no-install-recommends install git curl libssl-dev bash && apt-get clean all) || true'
+RUN sh -c '(which apt-get && apt-get update && apt-get -y --no-install-recommends install git curl libssl-dev bash && apt-get clean all) || true'
 ##RUST INSTALL AND CACHE
 
 
