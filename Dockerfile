@@ -6,8 +6,8 @@ RUN sh -c '(which apk && apk add git curl bash make git  curl libc-dev gcc pytho
 RUN sh -c '(which apt-get && apt-get update && apt-get -y --no-install-recommends install git curl libssl-dev bash && apt-get clean all) || true' && \
 pip3 install trafilatura &&  id -un && which npm && \
 bash -c "test -e /etc/scripts/ || mkdir /etc/scripts/ ; test -e /etc/scripts/gitub.com_drivet_send-all-webmentions/tmp/.gitub.com_drivet_send-all-webmentions || (  git clone https://github.com/drivet/send-all-webmentions.git /etc/scripts/gitub.com_drivet_send-all-webmentions/tmp/.gitub.com_drivet_send-all-webmentions )" && \
-head -c 12 /dev/urandom >/etc/.tmp &&  ( test -e /etc/webmention-static-ci || git clone --recurse-submodules https://gitlab.com/the-foundation/webmention-static-ci.git /etc/webmention-static-ci) && \
-head -c 12 /dev/urandom >/etc/.tmp &&  bash /etc/webmention-static-ci/run.sh PACKAGE_INSTALLER PACKAGE_INSTALLER && echo DONE && rm -rf /usr/share/doc /usr/share/man /root/.cpan /root/.cpanm /root/.cache/* || true && ( which apk && apk del gcc ; which apt-get && ( apt-get remove make gcc python3-wheel  && apt-get autoremove && apt-get clean all  ) || true  ) || true && \
+( test -e /etc/webmention-static-ci || git clone --recurse-submodules https://gitlab.com/the-foundation/webmention-static-ci.git /etc/webmention-static-ci) 
+RUN head -c 12 /dev/urandom >/etc/.tmp &&  bash /etc/webmention-static-ci/run.sh PACKAGE_INSTALLER PACKAGE_INSTALLER && echo DONE && rm -rf /usr/share/doc /usr/share/man /root/.cpan /root/.cpanm /root/.cache/* || true && ( which apk && apk del gcc ; which apt-get && ( apt-get remove make gcc python3-wheel  && apt-get autoremove && apt-get clean all  ) || true  ) || true && \
 test -e /etc/scripts/webmentions-php/mention-client-php/vendor || (cd /etc/scripts/webmentions-php/mention-client-php ; ls -lh1 ;composer install) && \
 cd /etc/scripts/webmentions-php && ls /etc/scripts/webmentions-php/mention-client-php|grep vendor && php /etc/scripts/webmentions-php/send_pingback_webmention.php |grep "no_target_url"
 
