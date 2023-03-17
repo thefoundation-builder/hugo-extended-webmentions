@@ -23,5 +23,7 @@ RUN du -m -s $(find / -type d -mindepth 3 -maxdepth 3 -xdev) |sort -n|tail -n 20
 RUN du -m -s $(find / -type d -mindepth 2 -maxdepth 2 -xdev) |sort -n|tail -n 20
 RUN du -m -s $(find / -type d -mindepth 1 -maxdepth 1 -xdev) |sort -n|tail -n 20
 
+RUN du -msx //etc/scripts
+
 RUN du -msx /
 
