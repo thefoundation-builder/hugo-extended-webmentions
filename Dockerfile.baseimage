@@ -1,0 +1,12 @@
+FROM registry.gitlab.com/pages/hugo/hugo_extended
+
+#docker run --rm -it registry.gitlab.com/pages/hugo/hugo_extended ash
+#npm nodejs
+RUN sh -c '(which apk && apk add git curl bash make git  curl libc-dev gcc python3-dev libxslt-dev py3-pip python3  py3-libxml2 perl-app-cpanminus apkbuild-cpan perl-json perl-yaml perl-net-ssleay perl-dbd-sqlite perl-lwp-protocol-https perl-lwp-useragent-determined perl-xml-xpath perl-moox-types-mooselike perl-moox-types-mooselike-numeric composer php-xmlwriter php-tokenizer php-xml php-dom php-json php-curl icu-data-full perl-test2-suite perl-sub-info perl-test-deep perl-ipc-run perl-test-warn perl-test-output perl-namespace-autoclean perl-class-tiny perl-file-copy-recursive perl-test-without-module  perl-module-pluggable perl-term-table perl-sub-quote perl-html-tree perl-test-requiresinternet perl-datetime-timezone perl-class-inspector perl-datetime-format-builder perl-test-needs perl-perlio-utf8_strict perl-datetime perl-datetime-calendar-julian perl-datetime-format-builder perl-datetime-format-iso8601 perl-datetime-format-mail perl-datetime-format-natural perl-datetime-format-pg perl-datetime-format-strptime perl-datetime-format-w3cdtf perl-datetime-format-xsd perl-datetime-hires perl-datetime-locale perl-datetime-timezone perl-moosex-types-datetime perl-moo perl-moose perl-moosex perl-moosex-types perl-moosex-types-common perl-moosex-types-datetime perl-moosex-types-path-class perl-moosex-types-uri perl-moox-types-mooselike perl-moox-types-mooselike-numeric perl-mojolicious perl-digest-sha1 perl-test-warnings)||true ;' 
+RUN sh -c '(which apt-get && apt-get update && apt-get -y --no-install-recommends install git curl libssl-dev bash && apt-get clean all) || true' 
+RUN bash -c "test -e /etc/scripts/ || mkdir /etc/scripts/ ; test -e /etc/scripts/gitub.com_drivet_send-all-webmentions/tmp/.gitub.com_drivet_send-all-webmentions || (  git clone https://github.com/drivet/send-all-webmentions.git /etc/scripts/gitub.com_drivet_send-all-webmentions/tmp/.gitub.com_drivet_send-all-webmentions )" 
+RUN pip3 install trafilatura &&  id -un 
+COPY install-whim.sh /root/.installwhim
+RUN bash /root/.installwhim
+RUN du -msx /
+
