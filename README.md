@@ -5,9 +5,9 @@ hugo-extended with webmention-static-ci
 ## Provides
 
 * hugo extended
+* `jq`,`curl`,`git`
 * https://gitlab.com/the-foundation/webmention-static-ci
-* whim (perl)
-
+  *  whim (perl)
 
 ### build status
 
