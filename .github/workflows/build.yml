@@ -65,7 +65,8 @@ jobs:
 ######          target-branch: main
 
   build-base:
-    runs-on: ubuntu-latest
+    #runs-on: ubuntu-latest
+    runs-on: quay.io/thefoundation/library:docker-with-buildx
     env:
       QUAY_PASS: ${{ secrets.QUAY_PASS }}
       QUAY_USER: ${{ secrets.QUAY_USER }}
@@ -108,6 +109,8 @@ jobs:
       - name: build BASE-images
 #        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=library;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
         run: docker buildx build --platform ${PLATFORMS}  --build-arg BUILDKIT_INLINE_CACHE=1 --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}_hugo_extended_webmention_baseimage --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}_hugo_extended_webmention -t $CI_REGISTRY_IMAGE:baseimage  -f Dockerfile.baseimage .
+      - name: "squash baseimage"
+        run: docker-squash-multiarch $CI_REGISTRY_IMAGE:baseimage
 #
 #      - name: build images
 ##        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=library;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
@@ -122,7 +125,8 @@ jobs:
 #      - name: build images to quay
 ##        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$QUAY_PASS;export REGISTRY_HOST=quay.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=libary;export REGISTRY_USER=${{ secrets.QUAY_USER }} ;bash _build_hocker.sh base-focal "
 #        run: docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $QU_REGISTRY_IMAGE  -f Dockerfile .
-  
+
+        
       - name: show files
 #        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
         run: docker image ls 
