@@ -142,9 +142,9 @@ jobs:
 #        run: bash -c "ls buildlogs/  -lh1 ; tail -n 20 buildlogs/*"
         run: docker image ls 
       - name: Archive production artifacts
-        if: steps.filter.outputs.baseimage == 'true'
+        if: steps.filter.outputs.baseimage == 'true' && failure()
         uses: actions/upload-artifact@v3
-        if: failure()
+#        if: failure()
         with:
          name: buildlogs
          path: |
