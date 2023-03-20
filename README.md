@@ -9,6 +9,9 @@ hugo-extended with webmention-static-ci
 * https://gitlab.com/the-foundation/webmention-static-ci
   *  whim (perl)
 
-### build status
+# build status
 
-![Github Build](https://github.com/thefoundation-builder/hugo-extended-webmentions/actions/workflows/build.yml/badge.svg)
+|Type|Status|
+|--|--|
+| Build Docker | ![Github Build](https://github.com/thefoundation-builder/hugo-extended-webmentions/actions/workflows/build.yml/badge.svg) |
+
