@@ -105,10 +105,11 @@ jobs:
         # Give an id to the step, so we can reference it later
         run: |
           echo "Detecting changed files"
-          echo "adding current path as safe dir"
-          git config --global --add safe.directory  $(pwd)
+          #echo "adding current path as safe dir"
+          #git config --global --add safe.directory  $(pwd)
+          git clone $(git config --get remote.origin.url) /tmp/cleancheckout
           echo "Diff HEAD with the previous commit"
-          diffed=$(git log -1 --oneline --name-only --pretty='' HEAD)
+          diffed=$(cd /tmp/cleancheckout && git log -1 --oneline --name-only --pretty='' HEAD)
           changestatus=false
           echo "FILES CHANGED IN LAST COMMIT"
           echo "$diffed"
