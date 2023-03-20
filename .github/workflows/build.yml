@@ -107,6 +107,7 @@ jobs:
           echo "Detecting changed files"
           #echo "adding current path as safe dir"
           #git config --global --add safe.directory  $(pwd)
+          echo "remoteURL is "$(git config --get remote.origin.url)
           git clone $(git config --get remote.origin.url) /tmp/cleancheckout
           echo "Diff HEAD with the previous commit"
           diffed=$(cd /tmp/cleancheckout && git log -1 --oneline --name-only --pretty='' HEAD)
