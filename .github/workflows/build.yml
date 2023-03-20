@@ -104,6 +104,8 @@ jobs:
       - id: check_file_changed
         # Give an id to the step, so we can reference it later
         run: |
+          echo "adding current path as safe dir"
+          git config --global --add safe.directory  $(pwd)
           echo "Diff HEAD with the previous commit"
           diff=$(git log -1 --oneline --name-only --pretty='' HEAD)
           changestatus=false
