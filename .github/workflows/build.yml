@@ -105,6 +105,8 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: current images
         run: docker image ls
+      - name: gnu date
+        run: apk add date
       - id: check_build_baseimage
         # Give an id to the step, so we can reference it later
         run: |
