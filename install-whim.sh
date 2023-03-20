@@ -15,3 +15,5 @@ which whim   2>/dev/null  |grep /whim || (
         make -j $(nproc)
         make install
       ) ## end whim
+
+##
