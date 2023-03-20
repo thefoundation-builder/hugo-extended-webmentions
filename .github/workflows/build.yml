@@ -10,10 +10,11 @@ on:
 # Run weekly, at 00:00 on sunday
 #    tags:
 #      - 'v*.*.*'
-  pull_request:
-    branches:
-      - 'dev'
-      - 'testing'
+
+#pull_request:
+#    branches:
+#      - 'dev'
+#      - 'testing'
 
 # permissions are needed if pushing to ghcr.io
 permissions:
@@ -119,6 +120,10 @@ jobs:
           echo "$diffed"
           # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
           echo "$diffed"  |grep -q -e "^Dockerfile.baseimage$" -e ^install-whim && changestatus=true  
+          # Check if our baseimage is older than a week
+          imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $CI_REGISTRY_IMAGE:baseimage | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
+          maxaimageage=6
+          [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
           ## DEPRECATED          echo "::set-output name=do_the_build::$changestatus"
@@ -132,7 +137,7 @@ jobs:
       - name: show cmd
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
 #        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=hocker;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
-        run: echo docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
+        run: echo docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention -t $CI_REGISTRY_IMAGE:baseimage  -f Dockerfile.baseimage .
       - name: build BASE-images
         if: steps.check_build_baseimage.outputs.do_the_build== 'true'
 #        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=library;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
@@ -198,8 +203,7 @@ jobs:
 #        with:
 #          username: ${{ secrets.DOCKERHUB_USERNAME }}
 #          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Login to GitHub Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
@@ -219,8 +223,7 @@ jobs:
       - name: build images
 #        run: sudo /bin/bash -c "export REGISTRY_PASSWORD=$REGISTRY_PASSWORD;export REGISTRY_HOST=docker.io;export REGISTRY_PROJECT=thefoundation;export PROJECT_NAME=library;export REGISTRY_USER=${{ secrets.REGISTRY_USER }} ;bash _build_hocker.sh base-focal "
         run: docker buildx build --platform ${PLATFORMS}  --push --pull --cache-to=type=registry,ref=$BUILDCACHE:zzz_buildcache_${{ github.event.repository.name }}__hugo_extended_webmention --cache-from=type=registry,ref=zzz_buildcache_${{ github.event.repository.name }}_hugo_extended_webmention_baseimage -t $CI_REGISTRY_IMAGE:latest  -f Dockerfile .
-      -
-        name: Login to Quay Container Registry
+      - name: Login to Quay Container Registry
         uses: docker/login-action@v2
         with:
           registry: quay.io
