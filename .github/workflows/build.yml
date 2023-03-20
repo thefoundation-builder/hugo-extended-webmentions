@@ -101,15 +101,19 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: current images
         run: docker image ls
-      - uses: dorny/paths-filter@v2.2.1
-        id: filter
-        with:
-          filters: |
-            baseimage:
-              - 'Dockerfile.baseimage'
-              - 'install-whim.sh'
-
-#              - '.github/workflows/**'
+      - id: check_file_changed
+        # Give an id to the step, so we can reference it later
+        run: |
+          # Diff HEAD with the previous commit
+          diff=$(git diff --name-only HEAD^ HEAD)
+          changestatus=false
+          # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+          echo "$diff"  |grep -q -e "^Dockerfile.baseimage$" -e ^install-whim && changestatus=true  
+          # Set the output named "docs_changed"
+          echo echo "::set-output name=docs_changed::$changestatus"
+          #Write-Host "::set-output name=docs_changed::$HasDiff"
+  
+      # Run the steps only with "docs_changed" equals "True"
       - name: show steps
         if: steps.filter.outputs.baseimage == 'true'
         run: echo "pushing to $CI_REGISTRY_IMAGE BASEIMAGE cached by $BUILDCACHE"
