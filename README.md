@@ -13,5 +13,5 @@ hugo-extended with webmention-static-ci
 
 |Type|Status|
 |--|--|
-| Build Docker | ![Github Build](https://github.com/thefoundation-builder/hugo-extended-webmentions/actions/workflows/build.yml/badge.svg) |
+| Docker | ![Github Build](https://github.com/thefoundation-builder/hugo-extended-webmentions/actions/workflows/build.yml/badge.svg) |
 
