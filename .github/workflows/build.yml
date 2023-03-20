@@ -101,7 +101,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: current images
         run: docker image ls
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v2.2.1
         id: filter
         with:
           filters: |
