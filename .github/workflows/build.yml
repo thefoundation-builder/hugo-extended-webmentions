@@ -108,11 +108,13 @@ jobs:
           echo "adding current path as safe dir"
           git config --global --add safe.directory  $(pwd)
           echo "Diff HEAD with the previous commit"
-          diff=$(git log -1 --oneline --name-only --pretty='' HEAD)
+          diffed=$(git log -1 --oneline --name-only --pretty='' HEAD)
           changestatus=false
+          echo "FILES CHANGED IN LAST COMMIT"
+          echo "$diffed"
           # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
-          echo "$diff"  |grep -q -e "^Dockerfile.baseimage$" -e ^install-whim && changestatus=true  
-          echo "answer to the did-files-change question is"$changestatus
+          echo "$diffed"  |grep -q -e "^Dockerfile.baseimage$" -e ^install-whim && changestatus=true  
+          echo "answer to the did-files-change question is "$changestatus
           # Set the output named "docs_changed"
           echo "::set-output name=docs_changed::$changestatus"
           #Write-Host "::set-output name=docs_changed::$HasDiff"
