@@ -35,6 +35,16 @@ env:
   PLATFORMS_ALPINE: "linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8"
 
 jobs:
+  del_runs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 1
+          keep_minimum_runs: 2
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
 ######  upstream:
