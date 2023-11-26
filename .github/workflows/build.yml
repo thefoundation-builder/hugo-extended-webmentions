@@ -135,12 +135,13 @@ jobs:
           # Check if our baseimage is older than a week
           docker pull  $CI_REGISTRY_IMAGE:baseimage &>/tmp/pull.err.log || true 
           imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $CI_REGISTRY_IMAGE:baseimage | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) )) &>/tmp/calc.err.log
-          echo checking..
+          echo checking.. calcerr
           grep -q "out of range"  /tmp/calc.err.log  && imageagedays=999
+          echo ckecking...no_img
           grep -qi "no such image"  /tmp/pull.err.log  && imageagedays=999
           [[ -z "$imageagedays" ]] && imageagedays=999
           maxaimageage=6
-          echo "imageage $imageagedays"
+          echo "imageage $imageagedays maxage $maximageage"
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
