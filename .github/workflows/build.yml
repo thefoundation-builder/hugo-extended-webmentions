@@ -124,7 +124,7 @@ jobs:
           echo "$diffed"  |grep -q -e "^Dockerfile.baseimage$" -e ^install-whim && changestatus=true  
           # Check if our baseimage is older than a week
           docker pull  $CI_REGISTRY_IMAGE:baseimage || true 
-          imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $CI_REGISTRY_IMAGE:baseimage | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
+          imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $CI_REGISTRY_IMAGE:baseimage | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) )) || imageagedays=999
           maxaimageage=6
           echo "imageage $imageagedays"
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
