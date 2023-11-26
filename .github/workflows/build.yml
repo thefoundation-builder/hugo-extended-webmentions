@@ -141,8 +141,9 @@ jobs:
           grep -qi "no such image"  /tmp/pull.err.log  && imageagedays=999
           echo "checking..emptyage"
           [[ -z "$imageagedays" ]] && imageagedays=999
-          maxaimageage=6
+          maximageage=6
           echo "imageage $imageagedays maxage $maximageage"
+
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
