@@ -123,9 +123,10 @@ jobs:
           # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
           echo "$diffed"  |grep -q -e "^Dockerfile.baseimage$" -e ^install-whim && changestatus=true  
           # Check if our baseimage is older than a week
-          docker pull  $CI_REGISTRY_IMAGE:baseimage 
+          docker pull  $CI_REGISTRY_IMAGE:baseimage || true 
           imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $CI_REGISTRY_IMAGE:baseimage | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) ))
           maxaimageage=6
+          echo "imageage $imageagedays"
           [[ "$imageagedays" -gt "$maximageage" ]] && changestatus=true
           echo "answer to the did-files-change question is "$changestatus
           # Set the output named "do_the_build"
