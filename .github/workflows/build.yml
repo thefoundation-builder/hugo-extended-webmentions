@@ -138,6 +138,7 @@ jobs:
           echo checking.. calcerr
           grep -q "out of range"  /tmp/calc.err.log  && imageagedays=999
           echo checking...no_img
+          cat  /tmp/pull.err.log
           grep -qi "no such image"  /tmp/pull.err.log  && imageagedays=999
           echo "checking..emptyage"
           [[ -z "$imageagedays" ]] && imageagedays=999
