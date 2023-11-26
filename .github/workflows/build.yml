@@ -137,7 +137,7 @@ jobs:
           imageagedays=$(( ( $(date +%s ) - $(date --date=$(docker image inspect $CI_REGISTRY_IMAGE:baseimage | jq .[]."Created" --raw-output) +%s) ) /(60*60*24) )) &>/tmp/calc.err.log
           echo checking..
           grep -q "out of range"  /tmp/calc.err.log  && imageagedays=999
-          grep "no such image" -q /tmp/pull.err.log  && imageagedays=999
+          grep -qi "no such image"  /tmp/pull.err.log  && imageagedays=999
           [[ -z "$imageagedays" ]] && imageagedays=999
           maxaimageage=6
           echo "imageage $imageagedays"
