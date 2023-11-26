@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - name: Delete workflow runs
+      - name: Delete workflow runs from builder
         uses: Mattraks/delete-workflow-runs@main
         with:
           token: ${{ github.token }}
